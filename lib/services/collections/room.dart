@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class roomCollections {
   // get collection of rooms
   final CollectionReference rooms = FirebaseFirestore.instance.collection('rooms');
+  final CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   // GET DORM BY ID
   Future<Map<String, dynamic>?> getRoomById(String documentId) async {
@@ -13,6 +14,32 @@ class roomCollections {
         return docSnapshot.data() as Map<String, dynamic>?;
       } else {
         print('Document does not exist.');
+        return null;
+      }
+    } catch (e) {
+      print('Error getting document: $e');
+      return null;
+    }
+  }
+
+  // GET RESIDENT DORM
+  Future<Map<String, dynamic>?> getResidentRoomStream(String residentId) async {
+    try {
+      DocumentSnapshot residentSnapshot = await users.doc(residentId).get();
+
+      if (residentSnapshot.exists) {
+        final resident = residentSnapshot.data() as Map<String, dynamic>?;
+        print(resident);
+        DocumentSnapshot residentRoomSnapshot;
+        if (resident!["room_id"] != null) {
+          // GET RESIDENT ROOM FROM ROOM ID
+          residentRoomSnapshot = await rooms.doc(resident["room_id"]).get();
+          return residentRoomSnapshot as Map<String, dynamic>?;
+        }
+        print ('Penghuni kost belum memiliki kamar');
+        return null;
+      } else {
+        print('Penghuni kost tidak ditemukan!');
         return null;
       }
     } catch (e) {
