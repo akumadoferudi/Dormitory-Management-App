@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "105350268295",
+    "project_id": "fp-golekost",
+    "storage_bucket": "fp-golekost.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:105350268295:android:53c5c5b4e3a6cfe11f7f22",
+        "android_client_info": {
+          "package_name": "com.example.fp_golekost"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKlKMRVMvZzZKptYc0GqDWS_f5bIyBap8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
