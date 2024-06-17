@@ -5,24 +5,67 @@ import 'package:fp_golekost/services/collections/dorm.dart';
 import 'package:fp_golekost/pages/add_dorm_page.dart';
 import 'package:fp_golekost/components/item_widget.dart';
 
-class PenghuniKostIndexPage extends StatefulWidget {
-  const PenghuniKostIndexPage({super.key});
+class DormListPage extends StatefulWidget {
+  const DormListPage({super.key});
 
   @override
-  State<PenghuniKostIndexPage> createState() => _PenghuniKostIndexPageState();
+  State<DormListPage> createState() => _DormListPageState();
 }
 
-class _PenghuniKostIndexPageState extends State<PenghuniKostIndexPage> {
+class _DormListPageState extends State<DormListPage> {
   final DormCollections Dorm = DormCollections();
+
+  // void openDormForm({String? docID}) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) => AlertDialog(
+  //       content: TextField(
+  //         controller: textController,
+  //       ),
+  //       actions: [
+  //         // save button
+  //         ElevatedButton(
+  //           onPressed: () {
+  //             // add new note
+  //             if (docID == null) {
+  //               firestoreService.addNote(textController.text);
+  //             }
+  //             // update an existing note
+  //             else {
+  //               firestoreService.updateNote(docID, textController.text);
+  //             }
+  //             // clear text controller
+  //             textController.clear();
+  //             // close the box
+  //             Navigator.pop(context);
+  //           },
+  //           child: Text('Add'),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
-    // const items = 4;
+    const items = 4;
 
     return Scaffold(
       // resizeToAvoidBottomInset : false,
       appBar: AppBar(
         title: const Text('Pilih Kost'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            tooltip: 'Add new dorm',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddDormPage()),
+              );
+            },
+          )
+        ],
         backgroundColor: Colors.lightGreenAccent,
       ),
       body: StreamBuilder<QuerySnapshot>(

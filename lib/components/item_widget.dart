@@ -40,7 +40,7 @@ class ItemWidget extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const dormRoomIndexPage()),
+                      MaterialPageRoute(builder: (context) => const RoomListPage(roomList: room)),
                     );
                   },
                 ),
