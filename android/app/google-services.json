@@ -1,13 +1,51 @@
 {
   "project_info": {
-    "project_number": "105350268295",
-    "project_id": "fp-golekost",
-    "storage_bucket": "fp-golekost.appspot.com"
+    "project_number": "482150639136",
+    "project_id": "alpha-test-proj",
+    "storage_bucket": "alpha-test-proj.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:105350268295:android:53c5c5b4e3a6cfe11f7f22",
+        "mobilesdk_app_id": "1:482150639136:android:7e44341fe2f50c6e887e45",
+        "android_client_info": {
+          "package_name": "com.example.firebase_auth"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfKGAoV6ENp_aalG2Kx0953R7lmA9vwYU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:482150639136:android:433cacf0d20edfca887e45",
+        "android_client_info": {
+          "package_name": "com.example.firebase_test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfKGAoV6ENp_aalG2Kx0953R7lmA9vwYU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:482150639136:android:0251937dfd3a9528887e45",
         "android_client_info": {
           "package_name": "com.example.fp_golekost"
         }
@@ -15,7 +53,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBKlKMRVMvZzZKptYc0GqDWS_f5bIyBap8"
+          "current_key": "AIzaSyCfKGAoV6ENp_aalG2Kx0953R7lmA9vwYU"
         }
       ],
       "services": {

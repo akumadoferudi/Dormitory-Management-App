@@ -17,29 +17,17 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -53,10 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBKlKMRVMvZzZKptYc0GqDWS_f5bIyBap8',
-    appId: '1:105350268295:android:53c5c5b4e3a6cfe11f7f22',
-    messagingSenderId: '105350268295',
-    projectId: 'fp-golekost',
-    storageBucket: 'fp-golekost.appspot.com',
+    apiKey: 'AIzaSyCfKGAoV6ENp_aalG2Kx0953R7lmA9vwYU',
+    appId: '1:482150639136:android:0251937dfd3a9528887e45',
+    messagingSenderId: '482150639136',
+    projectId: 'alpha-test-proj',
+    storageBucket: 'alpha-test-proj.appspot.com',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyB7PXuK-lgHF7MgJeoWYPuQ-2-pnRSvu0w',
+    appId: '1:482150639136:web:219725dafb39a383887e45',
+    messagingSenderId: '482150639136',
+    projectId: 'alpha-test-proj',
+    authDomain: 'alpha-test-proj.firebaseapp.com',
+    storageBucket: 'alpha-test-proj.appspot.com',
+    measurementId: 'G-DBTSVWPP3F',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDgyV4K6dWG0QUDwgRf4M6XnMckmdngeDI',
+    appId: '1:482150639136:ios:e4c0aceeea62f8f0887e45',
+    messagingSenderId: '482150639136',
+    projectId: 'alpha-test-proj',
+    storageBucket: 'alpha-test-proj.appspot.com',
+    iosBundleId: 'com.example.fpGolekost',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyDgyV4K6dWG0QUDwgRf4M6XnMckmdngeDI',
+    appId: '1:482150639136:ios:e4c0aceeea62f8f0887e45',
+    messagingSenderId: '482150639136',
+    projectId: 'alpha-test-proj',
+    storageBucket: 'alpha-test-proj.appspot.com',
+    iosBundleId: 'com.example.fpGolekost',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyB7PXuK-lgHF7MgJeoWYPuQ-2-pnRSvu0w',
+    appId: '1:482150639136:web:5ae9027e99c83033887e45',
+    messagingSenderId: '482150639136',
+    projectId: 'alpha-test-proj',
+    authDomain: 'alpha-test-proj.firebaseapp.com',
+    storageBucket: 'alpha-test-proj.appspot.com',
+    measurementId: 'G-3ZMD7NYS8T',
+  );
+
 }

@@ -14,8 +14,9 @@ class FirestoreService {
   }
 
   // READ
-  Stream<QuerySnapshot> getRoomsStream() {
-    final roomsStream = rooms.snapshots();
+  Stream<QuerySnapshot> getRoomsStream(String dormId) {
+    // Based on dormID
+    final roomsStream = rooms.where("dorm_id", isEqualTo: dormId).snapshots();
     return roomsStream;
   }
 
@@ -33,6 +34,7 @@ class FirestoreService {
 
   // DELETE
   Future<void> deleteRoom(String docID, BuildContext context) async {
+
     final confirmed = await UiUtils.showPrompt(
       context,
       'Are you sure you want to delete this room?',
@@ -40,6 +42,10 @@ class FirestoreService {
     if (confirmed?? false) {
       return rooms.doc(docID).delete();
     }
+  }
+
+  Future<void> deleteRoomDangerous(String docID) async {
+    rooms.doc(docID).delete();
   }
 
 

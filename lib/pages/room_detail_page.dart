@@ -7,10 +7,11 @@ import 'package:fp_golekost/components/carousel_widget.dart';
 import 'add_edit_room_page.dart';
 
 class RoomDetails extends StatefulWidget {
+  final String dormId;
   final RoomData roomData;
   final FirestoreService firestoreService = FirestoreService();
 
-  RoomDetails({Key? key, required this.roomData}) : super(key: key);
+  RoomDetails({Key? key, required this.roomData, required this.dormId}) : super(key: key);
 
   @override
   _RoomDetailsState createState() => _RoomDetailsState();
@@ -34,7 +35,7 @@ class _RoomDetailsState extends State<RoomDetails> {
 
   Future<void> editRoom(BuildContext context) async {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => AddEditRoomPage(room: widget.roomData),
+      builder: (context) => AddEditRoomPage(room: widget.roomData, dormId: widget.dormId,),
     ));
   }
 

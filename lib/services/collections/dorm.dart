@@ -44,9 +44,15 @@ class DormCollections {
   }
 
   // UPDATE
-  Future<void> updateDorm(String documentId,  Map<String, dynamic> updatedData) async {
+  Future<void> updateDorm(String documentId,  String photo, String name, String description, String address) async {
     try {
-      await dorms.doc(documentId).update(updatedData);
+      await dorms.doc(documentId).update({
+        'photo': photo, // photo thumbnail
+        'name': name,
+        'description': description,
+        'address': address,
+        'updatedAt': Timestamp.now()
+      });
       print('Document successfully updated!');
     } catch (e) {
       print('Error updating document: $e');

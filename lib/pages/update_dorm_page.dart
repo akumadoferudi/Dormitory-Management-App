@@ -4,14 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fp_golekost/services/collections/dorm.dart';
 import 'package:fp_golekost/components/add_dorm_form.dart';
 
-class AddDormPage extends StatefulWidget {
-  const AddDormPage({super.key});
-
+class UpdateDormPage extends StatefulWidget {
+  const UpdateDormPage({super.key, required this.dormId});
+  final String dormId;
   @override
-  State<AddDormPage> createState() => _AddDormPageState();
+  State<UpdateDormPage> createState() => _UpdateDormPageState();
 }
 
-class _AddDormPageState extends State<AddDormPage> {
+class _UpdateDormPageState extends State<UpdateDormPage> {
   final DormCollections Dorm = DormCollections();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController namaController = TextEditingController();
@@ -19,7 +19,7 @@ class _AddDormPageState extends State<AddDormPage> {
   final TextEditingController deskripsiController = TextEditingController();
   final TextEditingController fotoController = TextEditingController();
 
-  Future<void> createData() async {
+  Future<void> updateData() async {
     showDialog(
         context: context,
         builder: (context) {
@@ -29,7 +29,7 @@ class _AddDormPageState extends State<AddDormPage> {
         });
 
     try {
-      await DormCollections().storeDorm(fotoController.text, namaController.text, deskripsiController.text, alamatController.text);
+      await DormCollections().updateDorm(widget.dormId, fotoController.text, namaController.text, deskripsiController.text, alamatController.text);
       Navigator.pop(context);
       Navigator.pop(context);
     } on FirebaseException catch (e) {
@@ -57,12 +57,27 @@ class _AddDormPageState extends State<AddDormPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Tambah Kost'),
-        backgroundColor: Colors.lightGreenAccent,
-      ),
-      body: SingleChildScrollView(child: addDormForm(_formKey, namaController, alamatController, deskripsiController, fotoController, createData, {})),
+    // Load the old dorm's data first
+    Future<Map<String, dynamic>?>oldDataFuture = Dorm.getDormById(widget.dormId);
+    return FutureBuilder<Map<String, dynamic>?>(
+      future: oldDataFuture, builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>?> snapshot) {
+      if (!snapshot.hasData) {
+        // while data is loading:
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else {
+        // data loaded:
+        final oldData = snapshot.data;
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Tambah Kost'),
+            backgroundColor: Colors.lightGreenAccent,
+          ),
+          body: SingleChildScrollView(child: addDormForm(_formKey, namaController, alamatController, deskripsiController, fotoController, updateData, oldData!)),
+        );
+      }
+    },
     );
   }
 }

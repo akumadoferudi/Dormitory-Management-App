@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:fp_golekost/services/collections/dorm.dart';
 import 'package:fp_golekost/pages/add_dorm_page.dart';
 import 'package:fp_golekost/components/item_widget.dart';
+import 'package:fp_golekost/services/firestore_service.dart';
+
+import '../services/collections/room_data.dart';
 
 class DormListPage extends StatefulWidget {
   const DormListPage({super.key});
@@ -14,6 +17,68 @@ class DormListPage extends StatefulWidget {
 
 class _DormListPageState extends State<DormListPage> {
   final DormCollections Dorm = DormCollections();
+  Future<void> deleteDorm(String dormId) async {
+    // final service = widget.isResident ? ResidentService() : AdminService();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.deepPurple,
+          title: Center(
+            child: Text(
+              "Are you sure, all rooms will also be deleted",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("No, i changed my mind.", style: TextStyle(color: Colors.white),)),
+            TextButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+
+                  Stream<QuerySnapshot> rooms = FirestoreService().getRoomsStream(dormId);
+
+                  // Takes time to get docs
+                  await rooms.listen((event) async {List<RoomData> roomList = (event.docs.map((doc) {
+                    return RoomData.fromFirestore(doc);
+                  }).toList());
+
+
+                  // // Delete rooms first, then the dorm
+                  for (var room in roomList){
+                    await FirestoreService().deleteRoomDangerous(room.id);
+                  }
+                  });
+
+                  await DormCollections().deleteDorm(dormId);
+                  genericErrorMessage("Dorm deleted");
+                },
+                child: Text("Yes.", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),))
+          ],
+        );
+      },
+    );
+  }
+  void genericErrorMessage(String msg) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.deepPurple,
+          title: Center(
+            child: Text(
+              msg,
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   // void openDormForm({String? docID}) {
   //   showDialog(
@@ -61,7 +126,7 @@ class _DormListPageState extends State<DormListPage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddDormPage()),
+                  MaterialPageRoute(builder: (context) => AddDormPage()),
               );
             },
           )
@@ -84,9 +149,6 @@ class _DormListPageState extends State<DormListPage> {
                 DocumentSnapshot document = dormList[index];
                 String docId = document.id;
 
-                // print('INI ERRORNYA!!!');
-                print(document.data());
-                // print('INI ERRORNYA!!!');
 
                 // get note from each doc
                 Map<String, dynamic> data = document.data() as Map<String, dynamic>;
@@ -95,7 +157,7 @@ class _DormListPageState extends State<DormListPage> {
                 String dormAddress = data['address'];
 
                 // display as a list tile
-                return ItemWidget(photo: dormPhoto, name: dormName, address: dormAddress);
+                return ItemWidget(dormId: docId, photo: dormPhoto, name: dormName, address: dormAddress, onDelete: deleteDorm,);
               },
             );
           }

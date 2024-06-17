@@ -14,7 +14,7 @@ final RoomData dummyRoomData = RoomData(
     Facility(name: 'Free Wi-Fi'),
     Facility(name: 'Air Conditioning'),
   ],
-  availability: true,
+  availability: true, dormId: 't3NLsmC4uCZw8C9HlRzg',
 );
 
 Map<String, dynamic> dummyOccupantData = {

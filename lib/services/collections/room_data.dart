@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RoomData {
   final String id;
+  final String dormId;
   final String name;
   final String description;
   final String price;
@@ -12,6 +13,7 @@ class RoomData {
 
   RoomData({
     required this.id,
+    required this.dormId,
     required this.name,
     required this.description,
     required this.price,
@@ -24,6 +26,7 @@ class RoomData {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return RoomData(
       id: doc.id,
+      dormId: data['dorm_id'],
       name: data['name'],
       description: data['description'],
       price: data['price'],
@@ -39,6 +42,7 @@ class RoomData {
 
   Map<String, dynamic> toFirestore() {
     return {
+      'dorm_id': dormId,
       'name': name,
       'description': description,
       'price': price,

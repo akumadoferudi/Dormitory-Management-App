@@ -6,8 +6,9 @@ import 'package:fp_golekost/services/firestore_service.dart';
 
 class AddEditRoomPage extends StatefulWidget {
   final RoomData? room;
+  final String dormId;
 
-  const AddEditRoomPage({super.key, this.room});
+  const AddEditRoomPage({super.key, this.room, required this.dormId});
 
   @override
   _AddEditRoomPageState createState() => _AddEditRoomPageState();
@@ -27,7 +28,7 @@ class _AddEditRoomPageState extends State<AddEditRoomPage> {
   bool isEditMode = false;
 
   FirestoreService _firestoreService = FirestoreService();
-
+// TODO : Input Validation
   @override
   void initState() {
     super.initState();
@@ -51,7 +52,7 @@ class _AddEditRoomPageState extends State<AddEditRoomPage> {
       price: _priceController.text,
       roomImages: _imageLinks.map((link) => RoomImage(imageLink: link)).toList(),
       roomFacilities: _facilities.map((name) => Facility(name: name)).toList(),
-      availability: _availability,
+      availability: _availability, dormId: widget.dormId,
     );
 
     if (isEditMode) {

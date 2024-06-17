@@ -14,7 +14,7 @@ class UiUtils {
               onPressed: () => Navigator.of(context).pop(false),
             ),
             TextButton(
-              child: const Text('Delete'),
+              child: const Text('Yes'),
               onPressed: () => Navigator.of(context).pop(true),
             ),
           ],

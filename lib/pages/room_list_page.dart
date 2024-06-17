@@ -11,7 +11,8 @@ import 'package:fp_golekost/pages/room_detail_page.dart';
 import 'add_edit_room_page.dart';
 
 class RoomListPage extends StatefulWidget {
-  const RoomListPage({super.key});
+  final String dormId;
+  const RoomListPage({super.key, required this.dormId});
 
   @override
   _RoomListPageState createState() => _RoomListPageState();
@@ -29,13 +30,13 @@ class _RoomListPageState extends State<RoomListPage> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AddEditRoomPage()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddEditRoomPage(dormId: widget.dormId)));
             },
           ),
         ],
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: _firestoreService.getRoomsStream(),
+        stream: _firestoreService.getRoomsStream(widget.dormId),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
@@ -48,7 +49,9 @@ class _RoomListPageState extends State<RoomListPage> {
           final List<RoomData> rooms = snapshot.data!.docs.map((doc) {
             return RoomData.fromFirestore(doc);
           }).toList();
-
+          if (rooms.isEmpty){
+            return Center(child: Text("No Rooms."),);
+          }
           return ListView.builder(
             itemCount: rooms.length,
             itemBuilder: (context, index) {
@@ -57,7 +60,7 @@ class _RoomListPageState extends State<RoomListPage> {
                 onTap: () {
                   Navigator.of(context).push(
                       MaterialPageRoute(
-                          builder: (context) => RoomDetails(roomData: room)
+                          builder: (context) => RoomDetails(roomData: room, dormId: widget.dormId,)
                       )
                   );
                 },
@@ -65,7 +68,7 @@ class _RoomListPageState extends State<RoomListPage> {
                   room: room,
                   onEdit: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => AddEditRoomPage(room: room),
+                      builder: (context) => AddEditRoomPage(room: room, dormId: widget.dormId,),
                     ));
                   },
                   onDelete: () {
