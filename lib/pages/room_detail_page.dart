@@ -28,7 +28,7 @@ class RoomDetails extends StatefulWidget {
     List<DropdownMenuItem<int>> menuItems = [
       DropdownMenuItem(child: Text("Belum Bayar"), value: 1),
       DropdownMenuItem(child: Text("Sudah Bayar"), value: 2),
-      DropdownMenuItem(child: Text("Telat Bayar"), value: 2)
+      DropdownMenuItem(child: Text("Telat Bayar"), value: 3)
     ];
     return menuItems;
   }
@@ -222,6 +222,7 @@ class _RoomDetailsState extends State<RoomDetails> {
               ),
               _isOccupied
                   ? Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
@@ -247,6 +248,7 @@ class _RoomDetailsState extends State<RoomDetails> {
                             const SizedBox(width: 16.0),
                             _isOwnerView
                                 ? Column(
+                                mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text('Name: ${_occupantData['name']}'),
@@ -254,11 +256,16 @@ class _RoomDetailsState extends State<RoomDetails> {
                                 Text('Phone Number: ${_occupantData['phone']}'),
                                 Text('Entry Date: ${_occupantData['tgl_masuk']}'),
                                 Text('Payment Status: ${widget.status[_occupantData['status_pembayaran']]}'),
-                                _isOwnerView && selectedRole! > 0 ? Column(
+                                 selectedRole! > 0 ? Column(
+
                                   children: [
                                     Container(
-                                      width: double.maxFinite,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey
+                                      ),
+                                      width: 250,
                                       child: DropdownButtonFormField(
+
                                         autovalidateMode: AutovalidateMode.always,
                                         dropdownColor: Colors.white,
                                         style: TextStyle(color: Colors.black),
@@ -268,9 +275,9 @@ class _RoomDetailsState extends State<RoomDetails> {
                                           selectedRole = value;
                                           setState(() {});
                                         },
-                                        value: 0,
+                                        value: selectedRole,
                                         validator: (int? value) {
-                                          return value == null || value < 1
+                                          return value == null
                                               ? "Pilih status pembayaran"
                                               : null;
                                         },
