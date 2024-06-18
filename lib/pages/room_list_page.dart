@@ -1,11 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'package:fp_golekost/services/collections/dorm.dart';
-import 'package:fp_golekost/pages/add_dorm_page.dart';
-import 'package:fp_golekost/components/item_widget.dart';
 import 'package:fp_golekost/services/collections/room_data.dart';
 import 'package:fp_golekost/services/firestore_service.dart';
 import 'package:fp_golekost/components/room_card.dart';
@@ -89,23 +85,17 @@ class _RoomListPageState extends State<RoomListPage> {
                           },
                           child: RoomCard(
                             room: room,
-                            onEdit: () {
-                              widget.isResident
-                                  ? null
-                                  : Navigator.of(context)
-                                      .push(MaterialPageRoute(
-                                      builder: (context) => AddEditRoomPage(
-                                        room: room,
-                                        dormId: widget.dormId,
-                                      ),
-                                    ));
-                            },
-                            onDelete: () {
-                              widget.isResident
-                                  ? null
-                                  : _firestoreService.deleteRoom(
-                                      room.id, context);
-                            },
+                            onEdit: widget.isResident
+                                ? null
+                                : () => Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => AddEditRoomPage(
+                                room: room,
+                                dormId: widget.dormId,
+                              ),
+                            )),
+                            onDelete: widget.isResident
+                                ? null
+                                : () => _firestoreService.deleteRoom(room.id, context),
                           ),
                         );
                       },

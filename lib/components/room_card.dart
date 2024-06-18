@@ -5,14 +5,14 @@ import 'carousel_widget.dart';
 
 class RoomCard extends StatelessWidget {
   final RoomData room;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   const RoomCard({
     super.key,
     required this.room,
-    required this.onEdit,
-    required this.onDelete
+    this.onEdit,
+    this.onDelete
   });
 
   @override
@@ -31,7 +31,7 @@ class RoomCard extends StatelessWidget {
                 Text('Facilities: ${room.roomFacilities.map((f) => f.name).join(', ')}'),
               ],
             ),
-            trailing: Row(
+            trailing: (onEdit != null || onDelete != null) ? Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
@@ -43,7 +43,9 @@ class RoomCard extends StatelessWidget {
                   onPressed: onDelete,
                 ),
               ],
-            ),
+            )
+                :
+                null
           ),
         ],
       ),
