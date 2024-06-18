@@ -85,7 +85,7 @@ class _RoomDetailsState extends State<RoomDetails> {
                 onPressed: () async {
                   Navigator.pop(context);
                   Navigator.pop(context);
-                  await residents.doc(widget.residentId).update({"status_pembayaran": 2, "tgl_masuk": DateTime.now().toString(),"room_id": hasRoom ? "" : widget.roomData.id});
+                  await residents.doc(widget.residentId).update({"status_pembayaran": hasRoom ? 0 : 2, "tgl_masuk": DateTime.now().toString(),"room_id": hasRoom ? "" : widget.roomData.id});
                   await rooms.doc(widget.roomData.id).update({"availability": hasRoom});
                   genericErrorMessage("Occupancy updated.");
                 },
