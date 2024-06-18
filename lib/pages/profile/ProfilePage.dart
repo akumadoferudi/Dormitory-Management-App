@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:fp_golekost/model/resident_model.dart';
 import 'package:fp_golekost/pages/dorm_list_page.dart';
 import 'package:fp_golekost/pages/profile/UpdateProfilePage.dart';
+import 'package:fp_golekost/pages/room_detail_page.dart';
 import 'package:fp_golekost/services/admin_service.dart';
+import 'package:fp_golekost/services/collections/room_data.dart';
 import 'package:fp_golekost/services/firestore_service.dart';
 import 'package:fp_golekost/services/resident_service.dart';
 import 'ProfileMenu.dart';
@@ -28,8 +30,10 @@ class ProfilePage extends StatelessWidget {
     String tProfileSubHeading = "ProfileSH";
     const String tViewProfile = "View Profile";
     String userRoomId = "";
+    String userId = "";
     final service = isResident ? ResidentService() : AdminService();
-    final userData = service.getUser(user.email!);
+    final userDataStream = service.getUser(user.email!);
+    Map<String, dynamic>? userData;
 
     final tPrimaryColor = Theme.of(context).colorScheme.onPrimary;
     const tDefaultSize = 10.0;
@@ -81,14 +85,17 @@ class ProfilePage extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               StreamBuilder<QuerySnapshot>(
-                  stream: userData,
+                  stream: userDataStream,
                   builder: (context, snapshot) {
                     // if has data, get all documents from collection
                     if (snapshot.hasData) {
                       Map<String, dynamic> data =
-                          snapshot.data!.docs[0].data() as Map<String, dynamic>;
-                      String userId = snapshot.data!.docs[0].id;
+                      snapshot.data!.docs[0].data() as Map<String, dynamic>;
+                      userData = data;
+                      userId = snapshot.data!.docs[0].id;
                       userRoomId = data["room_id"];
+                      print(userRoomId);
+                      print(data["room_id"]);
                       return Column(children: [
                         Text(data['name'] ?? tProfileHeading,
                             style: Theme.of(context).textTheme.headlineLarge),
@@ -118,35 +125,65 @@ class ProfilePage extends StatelessWidget {
                                 style: TextStyle(color: Colors.black)),
                           ),
                         ),
+
+                        const SizedBox(height: 30),
+                        const Divider(),
+                        const SizedBox(height: 10),
+
+                        /// -- MENU
+                        ProfileMenuWidget(
+                          title: "Dorms",
+                          icon: Icons.house,
+                          onPress: () =>
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                  builder: (BuildContext context) => DormListPage(
+                                    isResident: isResident,
+                                  ))),
+                        ),
+                        const Divider(),
+                        const SizedBox(height: 10),
+                        if (userRoomId != "")
+                          ProfileMenuWidget(
+                            title: "My room",
+                            icon: Icons.door_back_door_outlined,
+                            onPress: () async {
+                              // Get the specific room info
+                              if (await FirestoreService().roomExist(userRoomId)) {
+                                  final roomSnapshot = await FirestoreService()
+                                      .getOccupantRoom(userRoomId);
+                                  if (roomSnapshot.exists) {
+                                    final roomData =
+                                        RoomData.fromFirestore(roomSnapshot);
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            RoomDetails(
+                                          roomData: roomData,
+                                          dormId: roomData.dormId,
+                                          // Assuming RoomData has dormId property
+                                          isResident: isResident,
+                                          residentId: userId,
+                                          curResidentData: userData!,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }
+                            },
+                          ),
+                        const Divider(),
+                        const SizedBox(height: 10),
+                        ProfileMenuWidget(
+                            title: "Logout",
+                            icon: Icons.logout,
+                            textColor: Colors.red,
+                            endIcon: false,
+                            onPress: signUserOut),
                       ]);
                     } else {
                       return const Text("Error retrieving data!");
                     }
                   }),
-
-
-              const SizedBox(height: 30),
-              const Divider(),
-              const SizedBox(height: 10),
-
-              /// -- MENU
-              ProfileMenuWidget(
-                title: "Dorms",
-                icon: Icons.house,
-                onPress: () =>
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (BuildContext context) => DormListPage(
-                              isResident: isResident,
-                            ))),
-              ),
-              const Divider(),
-              const SizedBox(height: 10),
-              ProfileMenuWidget(
-                  title: "Logout",
-                  icon: Icons.logout,
-                  textColor: Colors.red,
-                  endIcon: false,
-                  onPress: signUserOut),
             ],
           ),
         ),

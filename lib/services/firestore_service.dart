@@ -20,6 +20,12 @@ class FirestoreService {
     return roomsStream;
   }
 
+  Future<DocumentSnapshot> getOccupantRoom(String roomId) async {
+    // Based on dormID
+    final roomDoc = await rooms.doc(roomId).get();
+    return roomDoc;
+  }
+
   // UPDATE
   Future<void> updateRoom(RoomData room, BuildContext context) async {
     var docID = room.id;
