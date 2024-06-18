@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fp_golekost/model/resident_model.dart';
 import 'package:fp_golekost/pages/dorm_list_page.dart';
 import 'package:fp_golekost/pages/profile/UpdateProfilePage.dart';
 import 'package:fp_golekost/services/admin_service.dart';
+import 'package:fp_golekost/services/firestore_service.dart';
 import 'package:fp_golekost/services/resident_service.dart';
 import 'ProfileMenu.dart';
 import 'ViewProfilePage.dart';
@@ -25,6 +27,7 @@ class ProfilePage extends StatelessWidget {
     String tProfileHeading = "ProfileH";
     String tProfileSubHeading = "ProfileSH";
     const String tViewProfile = "View Profile";
+    String userRoomId = "";
     final service = isResident ? ResidentService() : AdminService();
     final userData = service.getUser(user.email!);
 
@@ -37,11 +40,6 @@ class ProfilePage extends StatelessWidget {
             onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.chevron_left)),
         title: Text(tProfile, style: Theme.of(context).textTheme.headlineLarge),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: Icon(isDark ? Icons.sunny : Icons.nightlight))
-        ],
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -89,35 +87,44 @@ class ProfilePage extends StatelessWidget {
                     if (snapshot.hasData) {
                       Map<String, dynamic> data =
                           snapshot.data!.docs[0].data() as Map<String, dynamic>;
+                      String userId = snapshot.data!.docs[0].id;
+                      userRoomId = data["room_id"];
                       return Column(children: [
                         Text(data['name'] ?? tProfileHeading,
                             style: Theme.of(context).textTheme.headlineLarge),
                         Text(data['email'] ?? tProfileSubHeading,
                             style: Theme.of(context).textTheme.bodyMedium),
+                        const SizedBox(height: 20),
+
+                        /// -- BUTTON
+                        SizedBox(
+                          width: 200,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              if (isResident && !await FirestoreService().roomExist(data["room_id"])){
+                                data["room_id"] = "";
+                                await ResidentService().updateUser(userId, ResidentModel(data['email'], data['name'], data['phone'], data['tgl_masuk'], data['status_pembayaran'], data['photo'], data['room_id']));
+                              }
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (BuildContext context) => ViewProfilePage(
+                                    isResident: isResident,
+                                  )));
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: tPrimaryColor,
+                                side: BorderSide.none,
+                                shape: const StadiumBorder()),
+                            child: const Text(tViewProfile,
+                                style: TextStyle(color: Colors.black)),
+                          ),
+                        ),
                       ]);
                     } else {
                       return const Text("Error retrieving data!");
                     }
                   }),
 
-              const SizedBox(height: 20),
 
-              /// -- BUTTON
-              SizedBox(
-                width: 200,
-                child: ElevatedButton(
-                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => ViewProfilePage(
-                            isResident: isResident,
-                          ))),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: tPrimaryColor,
-                      side: BorderSide.none,
-                      shape: const StadiumBorder()),
-                  child: const Text(tViewProfile,
-                      style: TextStyle(color: Colors.black)),
-                ),
-              ),
               const SizedBox(height: 30),
               const Divider(),
               const SizedBox(height: 10),
@@ -126,10 +133,11 @@ class ProfilePage extends StatelessWidget {
               ProfileMenuWidget(
                 title: "Dorms",
                 icon: Icons.house,
-                onPress: () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (BuildContext context) => DormListPage(
-                          isResident: isResident,
-                        ))),
+                onPress: () =>
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (BuildContext context) => DormListPage(
+                              isResident: isResident,
+                            ))),
               ),
               const Divider(),
               const SizedBox(height: 10),

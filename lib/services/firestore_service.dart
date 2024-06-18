@@ -53,4 +53,9 @@ class FirestoreService {
     final snapshot = await rooms.limit(1).get();
     return snapshot.docs.isNotEmpty;
   }
+
+  Future<bool> roomExist(String id) async {
+    final doc = await rooms.doc(id).get();
+    return doc.exists;
+  }
 }
