@@ -33,6 +33,7 @@ class ResidentService implements UserServiceInterface {
             (QuerySnapshot doc) {
           doc.docs.forEach((element){
             residentData = element.data() as Map<String, dynamic>;
+            residentData["id"] = element.id;
           });
           // ...
         });

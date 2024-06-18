@@ -93,9 +93,7 @@ class ProfilePage extends StatelessWidget {
                       snapshot.data!.docs[0].data() as Map<String, dynamic>;
                       userData = data;
                       userId = snapshot.data!.docs[0].id;
-                      userRoomId = data["room_id"];
-                      print(userRoomId);
-                      print(data["room_id"]);
+                      userRoomId = isResident ? data["room_id"] : "";
                       return Column(children: [
                         Text(data['name'] ?? tProfileHeading,
                             style: Theme.of(context).textTheme.headlineLarge),

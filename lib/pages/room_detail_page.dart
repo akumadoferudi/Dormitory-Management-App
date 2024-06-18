@@ -23,6 +23,15 @@ class RoomDetails extends StatefulWidget {
     2: "Sudah membayar",
     3: "Telat membayar"
   };
+  //1 = belum bayar, 2 = sudah bayar, 3 = telat bayar
+  List<DropdownMenuItem<int>> get statusList {
+    List<DropdownMenuItem<int>> menuItems = [
+      DropdownMenuItem(child: Text("Belum Bayar"), value: 1),
+      DropdownMenuItem(child: Text("Sudah Bayar"), value: 2),
+      DropdownMenuItem(child: Text("Telat Bayar"), value: 2)
+    ];
+    return menuItems;
+  }
 
   RoomDetails({Key? key, required this.roomData, required this.dormId, required this.isResident, required this.residentId, required this.curResidentData}) : super(key: key);
 
@@ -33,7 +42,7 @@ class RoomDetails extends StatefulWidget {
 class _RoomDetailsState extends State<RoomDetails> {
   bool _isOwnerView = true;
   bool _isOccupied = false;
-
+  int? selectedRole = 0;
   // TODO: Temporary Occupant Data
   Map<String, dynamic> _occupantData = dummyOccupantData;
 
@@ -50,6 +59,11 @@ class _RoomDetailsState extends State<RoomDetails> {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => AddEditRoomPage(room: widget.roomData, dormId: widget.dormId,),
     ));
+  }
+
+  Future<void> editPaymentStatus() async {
+    final CollectionReference residents = FirebaseFirestore.instance.collection('resident');
+    await residents.doc(widget.curResidentData["id"]).update({"status_pembayaran": selectedRole});
   }
 
   Future<void> bookRoom() async {
@@ -124,6 +138,7 @@ class _RoomDetailsState extends State<RoomDetails> {
     _isOwnerView = !widget.isResident;
     _isOccupied =!widget.roomData.availability;
     _occupantData = widget.curResidentData;
+    selectedRole = widget.curResidentData["status_pembayaran"];
   }
 
   @override
@@ -239,6 +254,36 @@ class _RoomDetailsState extends State<RoomDetails> {
                                 Text('Phone Number: ${_occupantData['phone']}'),
                                 Text('Entry Date: ${_occupantData['tgl_masuk']}'),
                                 Text('Payment Status: ${widget.status[_occupantData['status_pembayaran']]}'),
+                                _isOwnerView && selectedRole! > 0 ? Column(
+                                  children: [
+                                    Container(
+                                      width: double.maxFinite,
+                                      child: DropdownButtonFormField(
+                                        autovalidateMode: AutovalidateMode.always,
+                                        dropdownColor: Colors.white,
+                                        style: TextStyle(color: Colors.black),
+                                        hint: const Text("Ganti status pembayaran penghuni?"),
+                                        items: widget.statusList,
+                                        onChanged: (int? value) {
+                                          selectedRole = value;
+                                          setState(() {});
+                                        },
+                                        value: 0,
+                                        validator: (int? value) {
+                                          return value == null || value < 1
+                                              ? "Pilih status pembayaran"
+                                              : null;
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ) : Container(),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    editPaymentStatus();
+                                  },
+                                  child: Text('Change payment status'),
+                                ),
                               ]
                             )
                                 : Column(
