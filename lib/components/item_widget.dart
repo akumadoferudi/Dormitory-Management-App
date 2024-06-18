@@ -10,12 +10,14 @@ class ItemWidget extends StatelessWidget {
     super.key,
     required this.photo,
     required this.name,
-    required this.address, required this.dormId, required this.onDelete,
+    required this.address, required this.dormId, required this.onDelete, required this.isResident, required this.admin_id,
   });
   final String dormId;
+  final String admin_id;
   final String photo;
   final String name;
   final String address;
+  final bool isResident;
   final Future<void> Function(String) onDelete;
 
   @override
@@ -52,15 +54,15 @@ class ItemWidget extends StatelessWidget {
                       },
                     ),
                     // Update
-                    IconButton(onPressed: (){
+                    isResident ? SizedBox(width: 1, height: 1,): IconButton(onPressed: (){
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => UpdateDormPage(dormId: dormId,)),
+                        MaterialPageRoute(builder: (context) => UpdateDormPage(dormId: dormId, isResident: isResident, admin_id: admin_id,)),
                       );
                     }, icon: const Icon(Icons.edit)),
 
                     // Delete
-                    IconButton(onPressed: ()=>onDelete(dormId), icon: const Icon(Icons.delete)),
+                    isResident ? SizedBox(width: 1, height: 1,): IconButton(onPressed: ()=>onDelete(dormId), icon: const Icon(Icons.delete)),
                   ],
                 )
               ],

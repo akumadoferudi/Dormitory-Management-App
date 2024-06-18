@@ -1,12 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fp_golekost/services/admin_service.dart';
 
 import 'package:fp_golekost/services/collections/dorm.dart';
 import 'package:fp_golekost/components/add_dorm_form.dart';
 
 class UpdateDormPage extends StatefulWidget {
-  const UpdateDormPage({super.key, required this.dormId});
+  const UpdateDormPage({super.key, required this.dormId, required this.isResident, required this.admin_id});
   final String dormId;
+  final String admin_id;
+  final bool isResident;
   @override
   State<UpdateDormPage> createState() => _UpdateDormPageState();
 }
@@ -29,7 +33,8 @@ class _UpdateDormPageState extends State<UpdateDormPage> {
         });
 
     try {
-      await DormCollections().updateDorm(widget.dormId, fotoController.text, namaController.text, deskripsiController.text, alamatController.text);
+
+      await DormCollections().updateDorm(widget.dormId, fotoController.text, namaController.text, deskripsiController.text, alamatController.text, widget.admin_id);
       Navigator.pop(context);
       Navigator.pop(context);
     } on FirebaseException catch (e) {

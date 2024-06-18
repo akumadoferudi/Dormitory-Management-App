@@ -5,8 +5,8 @@ class DormCollections {
   final CollectionReference dorms = FirebaseFirestore.instance.collection('dorms');
 
   // READ
-  Stream<QuerySnapshot> getDormsStream() {
-    final dormsStream = dorms.orderBy('updatedAt', descending: true).snapshots();
+  Stream<QuerySnapshot> getDormsStream(bool getAll, String admin_id) {
+    final dormsStream = getAll ? dorms.orderBy('updatedAt', descending: true).snapshots() : dorms.where("admin_id", isEqualTo: admin_id).orderBy('updatedAt', descending: true).snapshots();
     return dormsStream;
   }
 
@@ -28,13 +28,14 @@ class DormCollections {
   }
 
   // CREATE
-  Future<void> storeDorm(String photo, String name, String description, String address) async {
+  Future<void> storeDorm(String photo, String name, String description, String address, String admin_id) async {
     try {
       await dorms.add({
         'photo': photo, // photo thumbnail
         'name': name,
         'description': description,
         'address': address,
+        'admin_id': admin_id,
         'createdAt': Timestamp.now(),
         'updatedAt': Timestamp.now()
       });
@@ -44,13 +45,14 @@ class DormCollections {
   }
 
   // UPDATE
-  Future<void> updateDorm(String documentId,  String photo, String name, String description, String address) async {
+  Future<void> updateDorm(String documentId,  String photo, String name, String description, String address, String admin_id) async {
     try {
       await dorms.doc(documentId).update({
         'photo': photo, // photo thumbnail
         'name': name,
         'description': description,
         'address': address,
+        'admin_id': admin_id,
         'updatedAt': Timestamp.now()
       });
       print('Document successfully updated!');
