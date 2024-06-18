@@ -158,15 +158,6 @@ class _AddEditRoomPageState extends State<AddEditRoomPage> {
                 ))
                     .toList(),
               ),
-              CheckboxListTile(
-                title: const Text('Available'),
-                value: _availability,
-                onChanged: (newValue) {
-                  setState(() {
-                    _availability = newValue!;
-                  });
-                },
-              ),
               ElevatedButton(
                 onPressed: () {
                   _saveRoom();

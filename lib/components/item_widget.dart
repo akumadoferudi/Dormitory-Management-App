@@ -49,7 +49,7 @@ class ItemWidget extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => RoomListPage(dormId: dormId,)),
+                          MaterialPageRoute(builder: (context) => RoomListPage(dormId: dormId, isResident: isResident,)),
                         );
                       },
                     ),

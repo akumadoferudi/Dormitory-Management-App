@@ -27,6 +27,18 @@ class ResidentService implements UserServiceInterface {
     return residentData;
   }
 
+  Future<Map<String, dynamic>> getUserByRoom(String id) async {
+    Map<String, dynamic> residentData = {};
+    await residents.where("room_id", isEqualTo: id).limit(1).get().then(
+            (QuerySnapshot doc) {
+          doc.docs.forEach((element){
+            residentData = element.data() as Map<String, dynamic>;
+          });
+          // ...
+        });
+    return residentData;
+  }
+
   // UPDATE
   @override
   Future<void> updateUser(String docID, covariant ResidentModel user){

@@ -21,7 +21,7 @@ Map<String, dynamic> dummyOccupantData = {
   'name': 'Budi Sumadi',
   'photo': 'https://picsum.photos/id/433/128/128',
   'email': 'Budiii@example.com',
-  'phoneNumber': '0813420777',
-  'entryDate': '2022-01-01',
-  'paymentStatus': true,
+  'phone': '0813420777',
+  'tgl_masuk': '2022-01-01',
+  'status_pembayaran': 2,
 };
