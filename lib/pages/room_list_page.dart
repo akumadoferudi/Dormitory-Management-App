@@ -29,7 +29,7 @@ class _RoomListPageState extends State<RoomListPage> {
         appBar: AppBar(
           title: const Text('Rooms List'),
           actions: [
-            IconButton(
+            widget.isResident ? Container() : IconButton(
               icon: const Icon(Icons.add),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
